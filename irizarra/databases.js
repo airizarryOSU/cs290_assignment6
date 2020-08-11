@@ -1,5 +1,6 @@
 var express = require('express');
 var mysql = require('./dbcon.js');
+var harmony = require('harmonica')();
 
 var app = express();
 var handlebars = require('express-handlebars').create(
