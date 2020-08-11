@@ -1,0 +1,109 @@
+<!doctype html>
+<!--Antonio Irizarry OSU: CS 290 Assignment 6-->
+<html>
+<head>
+    <title>Assignment 6: Databases</title>
+    <link href="/css/styles.css" rel="stylesheet">
+</head>
+<body>
+
+<h1>Completed Exercises</h1>
+
+<form class="get_form_new">
+    <fieldset>
+        <legend><em>Enter New Activity</em></legend>
+        <fieldset>
+            <p><em>Name of exercise</em></p>
+            <label for="name">Name</label>
+            <input type="text" id="name" name="name" required>
+            <label for="name"><b>Required Field</b></label>
+        </fieldset>
+        <fieldset>
+            <p><em>Date the exercise was performed</em></p>
+            <label for="date">Date</label>
+            <input type="date" id="date" name="date">
+        </fieldset>
+        <fieldset>
+            <p><em>Number of times the exercise was performed</em></p>
+            <label for="reps">Reps</label>
+            <input type="text" id="reps" name="reps" pattern="[0-9]+" placeholder="Enter Integer">
+        </fieldset>
+        <fieldset>
+            <p><em>Amount of weight used</em></p>
+            <label for="weight">Weight</label>
+            <input type="text" id="weight" name="weight" pattern="[0-9.]+" placeholder="Enter Integer or Decimal">
+        </fieldset>
+        <fieldset>
+            <p><em>Unit of measure</em></p>
+            <label for="unit">Unit</label>
+            <select id="unit" name="unit">
+              <option value=""> -- select an option -- </option>
+              <option value="1">lb</option>
+              <option value="0">kg</option>
+            </select>
+        </fieldset>
+        <button type="button" onclick="insertEvent()">Submit</button>
+    <!--    <button type="button" onclick="editEvent({{name}}, {{date}}, {{reps}}, {{weight}}, {{unit}})">Submit</button>  -->
+      </fieldset>
+</form>
+<br>
+<br>
+<table style="border: 1px solid black;">
+  <thead>
+    <tr>
+      {{#each fields}}
+        <th style="border: 1px solid black;">{{{this.name}}}</th>
+      {{/each}}
+      <th style="border: 1px solid black;">buttons</th>
+    </tr>
+  </thead>
+  <tbody>
+    {{#each results}}
+      <tr>
+        {{#each this}}
+          <td style="border: 1px solid black;">{{this}}</td>
+        {{/each}}
+        <td style="border: 1px solid black;">
+          <button type="button" id="editButton" onclick="window.location.href='/popup?id=' + {{id}}">Edit</button>
+          <button type="button" id="deleteButton" onclick="deleteEvent({{id}})">Delete</button>
+        </td>
+      </tr>
+    {{/each}}
+  </tbody>
+
+<script>
+
+  function insertEvent(){
+    var req = new XMLHttpRequest();
+    var name = document.getElementById('name').value;
+    var date = document.getElementById('date').value;
+    var reps = document.getElementById('reps').value;
+    var weight = document.getElementById('weight').value;
+    var unit = document.getElementById('unit').value;
+    req.open("GET",`/insert?name=${name}&date=${date}&reps=${reps}&weight=${weight}&unit=${unit}`, true);       // async == true
+    req.addEventListener("load", function(){
+        if(req.status >= 200 && req.status < 400){
+            window.location.reload(true);
+          } else {
+            console.log("Error! " + req.statusText);
+          }
+    })
+    req.send(null);    // request is sent *after* callback is attached to req.
+  };
+
+  function deleteEvent(id){
+    var req = new XMLHttpRequest();
+    req.open("GET","/delete?id=" + id, true);       // async == true
+    req.addEventListener("load", function(){
+      if(req.status >= 200 && req.status < 400){
+        window.location.reload(true);
+      } else {
+        console.log("Error! " + req.statusText);
+      }
+    })
+    req.send(null);    // request is sent *after* callback is attached to req.
+  };
+</script>
+
+</body>
+</html>

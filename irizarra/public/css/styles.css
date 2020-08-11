@@ -1,0 +1,6 @@
+table thead tr th:nth-child(1) {
+    display: none;
+}
+table tbody tr td:nth-child(1) {
+    display: none;
+}
